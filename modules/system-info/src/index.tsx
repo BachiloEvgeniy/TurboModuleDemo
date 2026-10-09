@@ -5,3 +5,7 @@ export { multiply } from './multiply';
 export function getSystemVersion(): string {
   return NativeSystemInfo.getSystemVersion();
 }
+
+export function getFreeDiskSpace(): Promise<number> {
+  return NativeSystemInfo.getFreeDiskSpace();
+}

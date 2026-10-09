@@ -31,6 +31,23 @@
   double result = [_implementation multiply:a b:b];
   return @(result);
 }
+- (void)getFreeDiskSpace:(RCTPromiseResolveBlock)resolve
+                 reject:(RCTPromiseRejectBlock)reject
+{
+  [_implementation getFreeDiskSpace:^(NSNumber * _Nullable bytes,
+                                     NSError * _Nullable error) {
+    if (error != nil) {
+      reject(
+        @"E_DISK_SPACE",
+        error.localizedDescription,
+        error
+      );
+      return;
+    }
+
+    resolve(bytes);
+  }];
+}
 
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
