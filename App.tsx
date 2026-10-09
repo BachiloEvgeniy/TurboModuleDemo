@@ -2,10 +2,17 @@ import { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { getSystemVersion, multiply } from 'react-native-system-info';
+import {
+  getSystemVersion,
+  multiply,
+  getFreeDiskSpace,
+} from 'react-native-system-info';
 export default function App() {
   const [systemVersion, setSystemVersion] = useState<string | null>(null);
   const [product, setProduct] = useState<number | null>(null);
+  const [freeDiskSpace, setFreeDiskSpace] = useState<number | null>(null);
+  const [isDiskLoading, setIsDiskLoading] = useState(false);
+  const [diskError, setDiskError] = useState<string | null>(null);
 
   function handleReadSystemVersion() {
     const version = getSystemVersion();
@@ -15,6 +22,23 @@ export default function App() {
   function handleMultiply() {
     const result = multiply(6, 7);
     setProduct(result);
+  }
+
+  async function handleReadDiskSpace() {
+    setIsDiskLoading(true);
+    setDiskError(null);
+    setFreeDiskSpace(null);
+
+    try {
+      const bytes = await getFreeDiskSpace();
+      setFreeDiskSpace(bytes);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      setDiskError(message);
+    } finally {
+      setIsDiskLoading(false);
+    }
   }
 
   return (
@@ -40,6 +64,19 @@ export default function App() {
           </Text>
 
           <Button title="Умножить 6 × 7" onPress={handleMultiply} />
+          <Text style={styles.result}>
+            {diskError !== null
+              ? `Ошибка: ${diskError}`
+              : freeDiskSpace === null
+              ? 'Свободное место ещё не прочитано'
+              : `Свободно: ${(freeDiskSpace / 1000000000).toFixed(2)} ГБ`}
+          </Text>
+
+          <Button
+            title={isDiskLoading ? 'Читаем…' : 'Получить свободное место'}
+            onPress={handleReadDiskSpace}
+            disabled={isDiskLoading}
+          />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
