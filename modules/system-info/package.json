@@ -9,6 +9,13 @@
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.systeminfo"
+    },
+    "ios": {
+      "modules": {
+        "SystemInfo": {
+          "className": "SystemInfo"
+        }
+      }
     }
   },
   "author": " <> ()",
