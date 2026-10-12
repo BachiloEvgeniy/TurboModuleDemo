@@ -49,12 +49,12 @@ export default function App() {
 
           <Text style={styles.result}>
             {systemVersion === null
-              ? 'Нажми кнопку, чтобы узнать версию iOS'
-              : `Версия iOS: ${systemVersion}`}
+              ? 'Нажми кнопку, чтобы узнать версию ОС'
+              : `Версия ОС: ${systemVersion}`}
           </Text>
 
           <Button
-            title="Получить версию iOS"
+            title="Получить версию ОС"
             onPress={handleReadSystemVersion}
           />
           <Text style={styles.result}>
